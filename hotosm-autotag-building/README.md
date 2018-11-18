@@ -94,6 +94,30 @@ The URL for the tile above is `https://ecn.t2.tiles.virtualearth.net/tiles/a1322
 
 To do this correctly we'll need to use the Bing API.  This [Metadata API](https://msdn.microsoft.com/en-us/library/ff701716.aspx) might be what we need.  It needs testing, and ideally we'd be able to query by bounding box, rather than a centre point.   See also these useful [overview notes on Bing Maps](https://msdn.microsoft.com/en-us/library/bb259689.aspx) themselves.
 
+## Validated Areas
+
+Project details can be retrieved, by project ID, as follows:
+
+```
+https://tasks.hotosm.org/api/v1/project/<projectid>
+```
+
+For example:
+
+```
+https://tasks.hotosm.org/api/v1/project/5364```
+```
+
+The response has a lot but interesting to us would be the fields:
+
+* `areaOfInterest`: this contains hundreds of lat/lon pairs. This seems to be a polygon defining the overall shape of the project region.
+* `entitiesToMap`: worth checking this includes `buildings`
+* `mappingTypes`: array, contains `BUILDINGS`
+* **`tasks`**: the big one. 
+  * `geometry`: This contains each feature square including box coordinates (5 points, first and last identical)
+  * `properties`:  
+
+
 
 # Train a model
 
