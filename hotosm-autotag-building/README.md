@@ -94,6 +94,22 @@ The URL for the tile above is `https://ecn.t2.tiles.virtualearth.net/tiles/a1322
 
 To do this correctly we'll need to use the Bing API.  This [Metadata API](https://msdn.microsoft.com/en-us/library/ff701716.aspx) might be what we need.  It needs testing, and ideally we'd be able to query by bounding box, rather than a centre point.   See also these useful [overview notes on Bing Maps](https://msdn.microsoft.com/en-us/library/bb259689.aspx) themselves.
 
+An API key is needed from [Bing Maps Portal](https://www.bingmapsportal.com).
+
+Here's an example API call that'll return a single tile's metadata, including the image URL:
+
+```
+https://dev.virtualearth.net/REST/V1/Imagery/Metadata/Aerial/16.851862450285,95.7293701000399?zl=15&o=json&key=<BING KEY>
+```
+
+changing the zoom level gives a series of images:
+
+![Image Tile](http://ecn.t3.tiles.virtualearth.net//tiles//a132201222203023.jpeg?g=6748) ![Image Tile](http://ecn.t2.tiles.virtualearth.net//tiles//a1322012222030232.jpeg?g=6748) ![Image Tile](http://ecn.t1.tiles.virtualearth.net//tiles//a13220122220302321.jpeg?g=6748) ![Image Tile](http://ecn.t1.tiles.virtualearth.net//tiles//a132201222203023211.jpeg?g=6748) ![Image Tile](http://ecn.t1.tiles.virtualearth.net//tiles//a1322012222030232111.jpeg?g=6748)
+
+The challenge here will be identifying the correct set of centre points to create the full grid of map tiles to cover a validated region at our desired zoom level.  I'm sure it's been done elsewhere so some reading is in order.
+
+
+
 ## Validated Areas
 
 Project details can be retrieved, by project ID, as follows:
@@ -115,7 +131,7 @@ The response has a lot but interesting to us would be the fields:
 * `mappingTypes`: array, contains `BUILDINGS`
 * **`tasks`**: the big one. 
   * `geometry`: This contains each feature square including box coordinates (5 points, first and last identical)
-  * `properties`:  
+  * `properties`: contains a `taskStatus`, e.g. `MAPPED`, `VALIDATED`, ... 
 
 
 
@@ -152,3 +168,33 @@ Here are articles / papers I've spotted that could be promising leads.
 1. Microsoft: [Classifying UK Roofs](https://blogs.technet.microsoft.com/uktechnet/2018/04/18/classifying-the-uks-roofs-from-aerial-imagery-using-deep-learning-with-cntk/), plus [source code](https://github.com/TempestVanSchaik/roof-Classification).
 1. [Automatic Building Extraction in Aerial Scenes
 Using Convolutional Networks](https://arxiv.org/pdf/1602.06564.pdf)
+
+
+# Todos
+
+- [ ] Collection scripts:
+  - [ ] Get validated regions via HOT APIs
+  - [ ] Get Bing map tiles for any given region (how many zoom levels?)
+    - [ ] Segment region polygon into multiple Bing tile centre points (for suitable zoom levels)
+    - [ ] Store tiles using quadkeys for names? Or coords?  These need to correspond neatly to building geometry
+  - [ ] Get building geometry from validated regions
+- [ ] Training data:
+  - [ ] Overlay building geometry atop Bing tiles
+  - [ ] Collect + organise across multiple HOT project areas
+- [ ] Machine learning: (for later) 
+  - [ ] ...
+
+
+# Notes on Python Environment
+
+The following should get you started:
+
+```
+virtualenv env
+source env/bin/activate
+
+pip install jupyter ipython numpy scipy scikit-learn geojson
+```
+
+
+
