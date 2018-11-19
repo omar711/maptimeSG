@@ -133,6 +133,7 @@ The response has a lot but interesting to us would be the fields:
   * `geometry`: This contains each feature square including box coordinates (5 points, first and last identical)
   * `properties`: contains a `taskStatus`, e.g. `MAPPED`, `VALIDATED`, ... 
 
+I've saved a full [sample JSON file](data/sample/5364-validated-region.json) for the project `5364`.
 
 
 # Train a model
