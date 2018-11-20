@@ -25,7 +25,7 @@ def is_perpendicular(bounding_box):
     return True
 
 
-def convert_task_to_row(task):
+def convert_task_to_row(task, project_id):
     coordinates = task["geometry"]["coordinates"]
     bounding_box = coordinates[0][0]
     task_id = task["properties"]["taskId"]
@@ -45,19 +45,19 @@ def convert_task_to_row(task):
     max_lat = max([coord[1] for coord in bounding_box])
     max_lon = max([coord[0] for coord in bounding_box])
 
-    return (task_id, min_lat, min_lon, max_lat, max_lon)
+    return (project_id, task_id, min_lat, min_lon, max_lat, max_lon)
 
 
-def write_tasks_to_csv(out, region):
+def write_tasks_to_csv(out, region, project_id):
 
     validated_tasks = 0
     total_tasks = 0
 
-    out.write("taskId, min_lat, min_lon, max_lat, max_lon\n")
+    out.write("project_id, task_id, min_lat, min_lon, max_lat, max_lon\n")
 
     for task in region["tasks"]["features"]:
         if task["properties"]["taskStatus"] == "VALIDATED":
-            row = convert_task_to_row(task)
+            row = convert_task_to_row(task, project_id)
 
             if row is not None:
                 out.write(",".join([str(r) for r in row]))
@@ -93,8 +93,8 @@ if __name__ == "__main__":
 
     region = load_region_tasks(args.regionJson)
 
-    projectId = region["projectId"]
-    outputFile = get_output_file(projectId, args.outputFolder)
+    project_id = region["projectId"]
+    outputFile = get_output_file(project_id, args.outputFolder)
 
     with open(outputFile, 'w') as out:
-        write_tasks_to_csv(out, region)
+        write_tasks_to_csv(out, region, project_id)
