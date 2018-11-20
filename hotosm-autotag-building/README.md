@@ -286,3 +286,29 @@ wc -l data/validated_tasks/*
 ```
 
 That means we have 14332 tasks that we can pull data from.  Each should contain many map tiles and many buildings.
+
+# Get Building Geometries per Task
+
+This will find all buildings that lie within the bounding box of any task.  It'll generate a lot. 
+
+Example usage:
+
+```
+python scripts/collect_building_geometries.py -t data/validated_tasks/2469-tasks.csv
+Looking up buildings for task 746, project 2469
+Looking up buildings for task 735, project 2469
+.
+.
+.
+
+```
+
+In this project we have 696 validated tasks so it'll query Overpass 696 times, in each case pulling a list of all buildings stored in that task area.  
+
+Once again, you can trawl a whole set of projects using:
+
+```
+for project in `ls -1 data/validated_tasks/`; do echo "Project: $project" && python scripts/collect_building_geometries.py -t "data/validated_tasks/$project"; done
+```
+
+This will likely need to run overnight.  There's also a high chance of failure so keeping a list of projects to do and projects done, might be worthwhile. 
