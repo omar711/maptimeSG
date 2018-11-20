@@ -1,0 +1,7 @@
+[out:json][timeout:25];
+(
+  way[building=yes](50.69,7.05,50.70,7.10);
+  node(w);
+);
+out body;
+>;

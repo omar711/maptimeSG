@@ -27,17 +27,15 @@ This is the query I'm using:
 ```
 [out:json][timeout:25];
 (
-  way[building=yes]({{bbox}});
+  way[building=yes](50.69,7.05,50.70,7.10);
   node(w);
-  
 );
 
 out body;
 >;
-out skel qt;
 ```
 
-Running the query highlights all buildings within your selected map view and returns data that looks like this:
+Running the query highlights all buildings within the bounding box specified `(50.69,7.05,50.70,7.10)` and returns data that looks like this:
 
 ```
 {
@@ -82,6 +80,14 @@ Running the query highlights all buildings within your selected map view and ret
 Each *way* is a building, because I filtered that way in the query above.  The way contains a list of *node*s.  These nodes are also contained in the results and will allow us to transform the list of nodes into a polygon. 
 
 If we can do this automatically, across all validated areas for a particular task (or set of them), we should have a decent set of true data specifying the location of buildings.  The next step would be to pull the relevant imagery from Bing so we can start training machine learning models.
+
+#### Command line version of the above
+
+If we write the contents of the above query into a file on disk, `data/sample/overpass-sample-query.post`, we can query Overpass as follows:
+
+```
+curl -XPOST https://overpass.kumi.systems/api/interpreter -d @data/sample/overpass-sample-query.post
+```
 
 
 ## Map tiles
