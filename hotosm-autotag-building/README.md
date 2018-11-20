@@ -185,6 +185,7 @@ Using Convolutional Networks](https://arxiv.org/pdf/1602.06564.pdf)
 - [ ] Collection scripts:
   - [x] Enumerate projects, e.g. we will start with the Ayeyarwady Delta
   - [x] Get validated regions via HOT APIs
+  - [ ] Handle irregular regions (>5 points in the bounding box)
   - [ ] Get Bing map tiles for any given region (how many zoom levels?)
     - [ ] Segment region polygon into multiple Bing tile centre points (for suitable zoom levels)
     - [ ] Store tiles using quadkeys for names? Or coords?  These need to correspond neatly to building geometry
@@ -254,3 +255,15 @@ taskId, min_lat, min_lon, max_lat, max_lon
 ```
 
 This data should guide the subsequent lookup of map tiles.
+
+You can run through a whole directory of project inputs with something like this:
+
+```
+for project in `ls -1 data/regions/`; do python scripts/get_validated_task_bounds.py -p "data/regions/$project"; done
+
+wc -l data/validated_tasks/*
+...
+7447
+```
+
+That means we have 7447 tasks that we can pull data from.  Each should contain many map tiles and many buildings.
