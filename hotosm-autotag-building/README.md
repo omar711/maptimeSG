@@ -227,7 +227,7 @@ Will fetch region information for every project given as input.  Use the JSON fi
 Example usage:
 
 ```
-python scripts/get_validated_regions.py -p data/projects/Ayeyarwady.json
+python scripts/get_project_regions.py -p data/projects/Ayeyarwady.json
 Looking up information for region 5364, saving to data/regions/5364.json
 .
 .
@@ -236,3 +236,21 @@ Looking up information for region 2469, saving to data/regions/2469.json
 ```
 
 
+# Get Validated Task Bounds
+
+Filters a region's tasks to include only `VALIDATED` ones.  Outputs a csv containing `taskId` and a bounding box, expressed as min/max latitude and longitude.
+
+```
+python scripts/get_validated_task_bounds.py -p data/regions/2469.json
+Written 696 validated tasks out of 886 total, to data/validated_tasks/2469-tasks.csv
+```
+
+Example output looks like this:
+
+```
+taskId, min_lat, min_lon, max_lat, max_lon
+746,16.8245079588,94.7774954283,16.8295079588,94.7824954283
+735,16.8345079588,94.7074954283,16.8395079588,94.7124954283
+```
+
+This data should guide the subsequent lookup of map tiles.
