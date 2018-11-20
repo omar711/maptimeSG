@@ -1,6 +1,6 @@
 [out:json][timeout:25];
 (
-  way[building=yes](50.69,7.05,50.70,7.10);
+  way[building=yes](16.8020079588,94.7424954283,16.8045079588,94.7449954283);
   node(w);
 );
 out body;
