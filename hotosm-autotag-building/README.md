@@ -300,10 +300,11 @@ Looking up buildings for task 735, project 2469
 .
 .
 .
-
+Looking up buildings for task 391, project 2469
+Written 29247 buildings to data/validated_buildings/2469-746-buildings.csv
 ```
 
-In this project we have 696 validated tasks so it'll query Overpass 696 times, in each case pulling a list of all buildings stored in that task area.  
+In this project we have 696 validated tasks so it'll query Overpass 696 times, in each case pulling a list of all 29,247 buildings stored in that task area.  
 
 Once again, you can trawl a whole set of projects using:
 
