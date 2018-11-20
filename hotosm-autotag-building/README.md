@@ -135,6 +135,15 @@ The response has a lot but interesting to us would be the fields:
 
 I've saved a full [sample JSON file](data/sample/5364-validated-region.json) for the project `5364`.
 
+## Project Enumeration
+
+A quick note on this, currently as a means of collecting relevant project IDs:
+
+```
+curl -H "Accept-Language: en" -XGET "https://tasks.hotosm.org/api/v1/project/search?mapperLevel=ALL&textSearch=Ayeyarwady"
+```
+
+
 
 # Train a model
 
@@ -174,6 +183,7 @@ Using Convolutional Networks](https://arxiv.org/pdf/1602.06564.pdf)
 # Todos
 
 - [ ] Collection scripts:
+  - [x] Enumerate projects, e.g. we will start with the Ayeyarwady Delta
   - [ ] Get validated regions via HOT APIs
   - [ ] Get Bing map tiles for any given region (how many zoom levels?)
     - [ ] Segment region polygon into multiple Bing tile centre points (for suitable zoom levels)
@@ -194,8 +204,18 @@ The following should get you started:
 virtualenv env
 source env/bin/activate
 
-pip install jupyter ipython numpy scipy scikit-learn geojson
+pip install jupyter ipython numpy scipy scikit-learn geojson requests
 ```
 
+# Command Line Tools
+
+These live under `scripts/`.  I'll just list basic usage examples for now.  Note there is little in the way of error handling right now. 
+
+## Enumerate Projects
+
+```
+python scripts/enumerate_projects.py  -t Ayeyarwady
+Found 40 matches.  Saving output to data/projects/Ayeyarwady.json
+```
 
 
