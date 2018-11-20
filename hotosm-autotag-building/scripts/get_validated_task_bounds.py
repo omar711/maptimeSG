@@ -73,19 +73,24 @@ def is_perpendicular(bounding_box):
 def convert_task_to_row(task):
     coordinates = task["geometry"]["coordinates"]
     bounding_box = coordinates[0][0]
+    task_id = task["properties"]["taskId"]
 
-    assert len(bounding_box) is 5, "expected 5 coordinates in bounding box but found %s" % bounding_box
-    assert bounding_box[0] == bounding_box[4], "expected the first and last coordinates to match: %s - %s" % (bounding_box[0], bounding_box[4])
-    assert is_perpendicular(bounding_box), "expected a bounding box perpendicular to the equator, %s" % bounding_box
+    if len(bounding_box) != 5:
+        print("WARN: skipping (taskId %s): expected 5 coordinates in bounding box but found %s" % (task_id, bounding_box))
+        return None
+
+    if not is_perpendicular(bounding_box):
+        print("WARN: skipping (taskId %s): expected a bounding box perpendicular to the equator, %s" % (task_id, bounding_box))
+        return None
+    
+    assert bounding_box[0] == bounding_box[4], "(taskId %s): expected the first and last coordinates to match: %s - %s" % (task_id, bounding_box[0], bounding_box[4])
 
     min_lat = min([coord[1] for coord in bounding_box])
     min_lon = min([coord[0] for coord in bounding_box])
     max_lat = max([coord[1] for coord in bounding_box])
     max_lon = max([coord[0] for coord in bounding_box])
 
-    taskId = task["properties"]["taskId"]
-
-    return (taskId, min_lat, min_lon, max_lat, max_lon)
+    return (task_id, min_lat, min_lon, max_lat, max_lon)
 
 
 def write_tasks_to_csv(out, region):
@@ -97,11 +102,13 @@ def write_tasks_to_csv(out, region):
 
     for task in region["tasks"]["features"]:
         if task["properties"]["taskStatus"] == "VALIDATED":
-            validated_tasks = validated_tasks + 1
-            
             row = convert_task_to_row(task)
-            out.write(",".join([str(r) for r in row]))
-            out.write("\n")
+
+            if row is not None:
+                out.write(",".join([str(r) for r in row]))
+                out.write("\n")
+
+                validated_tasks = validated_tasks + 1
         
         total_tasks = total_tasks + 1
 

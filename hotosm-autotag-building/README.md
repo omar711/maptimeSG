@@ -135,6 +135,19 @@ The response has a lot but interesting to us would be the fields:
 
 I've saved a full [sample JSON file](data/sample/5364-validated-region.json) for the project `5364`.
 
+### Note: Irregular Task Areas
+
+Most areas are square and I'm assuming this is the case in our data collection scripts.  This is not always true.  Here's an example:
+
+![irregular region](image/irregular-region.png)
+
+Some edge areas have irregular shapes.  Irregular shapes are non-rectangular ones, which we detect as having more or less than 4 corners, or as having any edges that are not vertical or horizontal lines.
+
+We could take the maximal bounding box in such cases, but that risks us later pulling in buildings from unvalidated areas and considering them validated.  
+
+The correct thing to do is to carry the full task polygon forward and then remove map tiles plus building geometry that falls outside of the polygon.  It'll add complexity so for now I will ignore any tasks with irregular shapes.
+
+
 ## Project Enumeration
 
 A quick note on this, currently as a means of collecting relevant project IDs:
@@ -185,7 +198,7 @@ Using Convolutional Networks](https://arxiv.org/pdf/1602.06564.pdf)
 - [ ] Collection scripts:
   - [x] Enumerate projects, e.g. we will start with the Ayeyarwady Delta
   - [x] Get validated regions via HOT APIs
-  - [ ] Handle irregular regions (>5 points in the bounding box)
+  - [ ] ~~Handle irregular regions (>5 points in the bounding box)~~
   - [ ] Get Bing map tiles for any given region (how many zoom levels?)
     - [ ] Segment region polygon into multiple Bing tile centre points (for suitable zoom levels)
     - [ ] Store tiles using quadkeys for names? Or coords?  These need to correspond neatly to building geometry
@@ -259,11 +272,11 @@ This data should guide the subsequent lookup of map tiles.
 You can run through a whole directory of project inputs with something like this:
 
 ```
-for project in `ls -1 data/regions/`; do python scripts/get_validated_task_bounds.py -p "data/regions/$project"; done
+for project in `ls -1 data/regions/`; do echo "Project: $project" && python scripts/get_validated_task_bounds.py -p "data/regions/$project"; done
 
 wc -l data/validated_tasks/*
 ...
-7447
+14332
 ```
 
-That means we have 7447 tasks that we can pull data from.  Each should contain many map tiles and many buildings.
+That means we have 14332 tasks that we can pull data from.  Each should contain many map tiles and many buildings.
