@@ -4,51 +4,6 @@ from pathlib import Path
 import json
 
 
-"""
-    "features": [
-      {
-        "type": "Feature",
-        "geometry": {
-          "type": "MultiPolygon",
-          "coordinates": [
-            [
-              [
-                [
-                  94.7774954283,
-                  16.8245079588
-                ],
-                [
-                  94.7774954283,
-                  16.8295079588
-                ],
-                [
-                  94.7824954283,
-                  16.8295079588
-                ],
-                [
-                  94.7824954283,
-                  16.8245079588
-                ],
-                [
-                  94.7774954283,
-                  16.8245079588
-                ]
-              ]
-            ]
-          ]
-        },
-        "properties": {
-          "taskId": 746,
-          "taskX": null,
-          "taskY": null,
-          "taskZoom": null,
-          "taskSplittable": false,
-          "taskStatus": "VALIDATED"
-        }
-      }
-"""
-
-
 def load_region_tasks(regionJson):
     with open(regionJson, "r") as f:
         return json.load(f)
