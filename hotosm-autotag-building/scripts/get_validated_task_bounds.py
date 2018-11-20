@@ -53,7 +53,7 @@ def write_tasks_to_csv(out, region, project_id):
     validated_tasks = 0
     total_tasks = 0
 
-    out.write("project_id, task_id, min_lat, min_lon, max_lat, max_lon\n")
+    out.write("project_id,task_id,min_lat,min_lon,max_lat,max_lon\n")
 
     for task in region["tasks"]["features"]:
         if task["properties"]["taskStatus"] == "VALIDATED":
