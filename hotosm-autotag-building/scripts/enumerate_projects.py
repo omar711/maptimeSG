@@ -34,14 +34,15 @@ def search_hot_projects_page(textSearch, page = None):
     else:
         r.raise_for_status()
 
+
 def get_output_file(textSearch, outputFolder):
     filename = textSearch.replace(" ", "_") + ".json"
     path = Path(outputFolder)
     path.mkdir(parents=True, exist_ok=True) 
     return path / filename 
 
-def parse_arguments():
-    
+
+def parse_arguments():    
     parser = ArgumentParser()
     parser.add_argument("-t", "--textSearch", dest="textSearch",
                         help="Find matching projects containing this text") 

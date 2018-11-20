@@ -184,7 +184,7 @@ Using Convolutional Networks](https://arxiv.org/pdf/1602.06564.pdf)
 
 - [ ] Collection scripts:
   - [x] Enumerate projects, e.g. we will start with the Ayeyarwady Delta
-  - [ ] Get validated regions via HOT APIs
+  - [x] Get validated regions via HOT APIs
   - [ ] Get Bing map tiles for any given region (how many zoom levels?)
     - [ ] Segment region polygon into multiple Bing tile centre points (for suitable zoom levels)
     - [ ] Store tiles using quadkeys for names? Or coords?  These need to correspond neatly to building geometry
@@ -213,9 +213,26 @@ These live under `scripts/`.  I'll just list basic usage examples for now.  Note
 
 ## Enumerate Projects
 
+Use this to fetch a list of projects and store away project details for later use.
+
 ```
 python scripts/enumerate_projects.py  -t Ayeyarwady
 Found 40 matches.  Saving output to data/projects/Ayeyarwady.json
+```
+
+## Get Region Information
+
+Will fetch region information for every project given as input.  Use the JSON file saved by the `enumerate_projects` tool as input to this.  
+
+Example usage:
+
+```
+python scripts/get_validated_regions.py -p data/projects/Ayeyarwady.json
+Looking up information for region 5364, saving to data/regions/5364.json
+.
+.
+.
+Looking up information for region 2469, saving to data/regions/2469.json
 ```
 
 
