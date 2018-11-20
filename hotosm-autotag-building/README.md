@@ -139,7 +139,7 @@ I've saved a full [sample JSON file](data/sample/5364-validated-region.json) for
 
 Most areas are square and I'm assuming this is the case in our data collection scripts.  This is not always true.  Here's an example:
 
-![irregular region](image/irregular-region.png)
+<img src="image/irregular-region.png" alt="irregular region" width="600"/>
 
 Some edge areas have irregular shapes.  Irregular shapes are non-rectangular ones, which we detect as having more or less than 4 corners, or as having any edges that are not vertical or horizontal lines.
 
