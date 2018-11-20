@@ -74,7 +74,7 @@ def convert_task_to_row(task):
     coordinates = task["geometry"]["coordinates"]
     bounding_box = coordinates[0][0]
 
-    assert len(bounding_box) is 5, "expected 5 coordinates in bounding box but found %" % bounding_box
+    assert len(bounding_box) is 5, "expected 5 coordinates in bounding box but found %s" % bounding_box
     assert bounding_box[0] == bounding_box[4], "expected the first and last coordinates to match: %s - %s" % (bounding_box[0], bounding_box[4])
     assert is_perpendicular(bounding_box), "expected a bounding box perpendicular to the equator, %s" % bounding_box
 
