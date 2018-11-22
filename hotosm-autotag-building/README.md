@@ -312,4 +312,4 @@ Once again, you can trawl a whole set of projects using:
 for project in `ls -1 data/validated_tasks/`; do echo "Project: $project" && python scripts/collect_building_geometries.py -t "data/validated_tasks/$project"; done
 ```
 
-This will likely need to run overnight.  There's also a high chance of failure so keeping a list of projects to do and projects done, might be worthwhile. 
+This is an overnight run, processing all validated tasks from the 40 Ayeyarwady projects we looked up to begin with.  It resulted in output of `545,179` validated building polygons.  The next step is to find the corresponding map tiles.
