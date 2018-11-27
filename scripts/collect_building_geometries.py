@@ -71,7 +71,6 @@ def load_tasks_from_file(taskCsv):
             yield row
         
 
-# TODO: handle writing of polygons in a nicer way / include any length polygon
 def write_polygons_to_csv(project_id, task_id, building_polygons, out):
     for building in building_polygons:
         row = [project_id, task_id] + building
