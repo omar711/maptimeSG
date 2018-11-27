@@ -1,5 +1,5 @@
 env/
-
+.bing_api_key
 .DS_Store
 
 # Byte-compiled / optimized / DLL files
