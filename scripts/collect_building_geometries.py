@@ -78,8 +78,8 @@ def write_polygons_to_csv(project_id, task_id, building_polygons, out):
         out.write("\n")
 
 
-def get_output_file(project_id, task_id, output_folder):
-    filename = "%s-%s-buildings.csv" % (project_id, task_id)
+def get_output_file(project_id, output_folder):
+    filename = "%s-buildings.csv" % (project_id, )
     path = Path(output_folder)
     path.mkdir(parents=True, exist_ok=True) 
     return path / filename 
@@ -109,7 +109,7 @@ if __name__ == "__main__":
         project_id = task["project_id"]
 
         if out is None:
-            output_file = get_output_file(project_id, task_id, args.outputFolder)
+            output_file = get_output_file(project_id, args.outputFolder)
             out = open(output_file, 'w') 
             out.write("project_id,task_id,way_id,bbox\n")
 
