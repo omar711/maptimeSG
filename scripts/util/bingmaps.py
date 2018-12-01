@@ -41,6 +41,11 @@ def pixel_xy_to_tile_xy(pixel_x, pixel_y):
     return (tile_x, tile_y)
 
 
+def lat_lon_to_tile_xy(latitude, longitude, level_of_detail):
+    (pixel_x, pixel_y) = lat_lon_to_pixel_xy(latitude, longitude, level_of_detail)
+    return pixel_xy_to_tile_xy(pixel_x, pixel_y) 
+
+
 def tile_xy_to_quadkey(tile_x, tile_y, level_of_detail):
     quadkey = ""
     for i in reversed(range(level_of_detail)):
@@ -63,3 +68,16 @@ def quadkey_containing_lat_lon(latitude, longitude, level_of_detail):
     (tile_x, tile_y) = pixel_xy_to_tile_xy(pixel_x, pixel_y)
     return tile_xy_to_quadkey(tile_x, tile_y, level_of_detail)
 
+
+def enumerate_quadkeys_in_box(min_latitude, min_longitude, max_latitude, max_longitude, level_of_detail):
+    (min_tile_x, min_tile_y) = lat_lon_to_tile_xy(max_latitude, min_longitude, level_of_detail)
+    (max_tile_x, max_tile_y) = lat_lon_to_tile_xy(min_latitude, max_longitude, level_of_detail)
+
+    print(min_tile_x, min_tile_y)
+    print(max_tile_x, max_tile_y)
+    quadkeys = []
+    for x in range(min_tile_x, max_tile_x + 1):
+        for y in range(min_tile_y, max_tile_y + 1):
+            quadkeys.append(tile_xy_to_quadkey(x, y, level_of_detail))
+
+    return sorted(quadkeys)
