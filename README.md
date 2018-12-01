@@ -270,7 +270,7 @@ The following should get you started:
 virtualenv env
 source env/bin/activate
 
-pip install jupyter ipython numpy scipy scikit-learn geojson requests
+pip install jupyter ipython numpy scipy scikit-learn geojson requests opencv-contrib-python
 ```
 
 # Command Line Tools
