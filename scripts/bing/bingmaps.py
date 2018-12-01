@@ -43,7 +43,7 @@ def pixel_xy_to_tile_xy(pixel_x, pixel_y):
 
 def tile_xy_to_quadkey(tile_x, tile_y, level_of_detail):
     quadkey = ""
-    for i in reversed(range(17)):
+    for i in reversed(range(level_of_detail)):
         digit = 0
         mask = 1 << i
 
