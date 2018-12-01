@@ -302,7 +302,7 @@ Looking up information for region 2469, saving to data/regions/2469.json
 ```
 
 
-# Get Validated Task Bounds
+## Get Validated Task Bounds
 
 Filters a region's tasks to include only `VALIDATED` ones.  Outputs a csv containing `taskId` and a bounding box, expressed as min/max latitude and longitude.
 
@@ -333,7 +333,7 @@ wc -l data/validated_tasks/*
 
 That means we have 14332 tasks that we can pull data from.  Each should contain many map tiles and many buildings.
 
-# Get Building Geometries per Task
+## Get Building Geometries per Task
 
 This will find all buildings that lie within the bounding box of any task.  It'll generate a lot. 
 
@@ -360,3 +360,22 @@ for project in `ls -1 data/validated_tasks/`; do echo "Project: $project" && pyt
 
 This is an overnight run, processing all validated tasks from the 40 Ayeyarwady projects we looked up to begin with.  It resulted in output of `545,179` validated building polygons.  The next step is to find the corresponding map tiles.
 
+## Get Map Tiles for Task
+
+This will pull map tiles that cover a given task, at a specified level of zoom.  Usage looks like:
+
+```
+python scripts/fetch_bing_tiles.py -t data/validated_tasks/2469-tasks.csv -z 18
+Created output folder at data/map_tiles/2469/746/18
+Written 20 images to data/map_tiles/2469/746/18
+```
+
+The output folder follows the pattern: `{project_id} / {task_id} / {zoom_level}`.  
+
+Similar to above, we can run this for a whole project using:
+
+```
+for project in `ls -1 data/validated_tasks/`; do echo "Project: $project" && python scripts/fetch_bing_tiles.py -t "data/validated_tasks/$project" -z 18; done
+```
+
+Run this once for each level of zoom we require, which I believe means 17, 18, 19.
