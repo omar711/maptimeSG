@@ -114,6 +114,52 @@ changing the zoom level gives a series of images:
 
 The challenge here will be identifying the correct set of centre points to create the full grid of map tiles to cover a validated region at our desired zoom level.  I'm sure it's been done elsewhere so some reading is in order.
 
+### Computing the tile for a given coordinate
+
+This is based on [instructions from Bing](https://msdn.microsoft.com/en-us/library/bb259689.aspx?f=255&MSPPError=-2147217396).
+
+Example: we have a building with a corner located at:  `16.8285533, 94.7808001`.  Let's choose a suitable zoom level to work with, `17`.  Converting our coordinates to pixel coordinates:
+
+```
+pixelX = ((94.7808001 + 180) / 360) * 256 * 2^17 = 25611426.8662807
+
+sinLatitude = sin(16.8285533 * pi / 180) = 0.28950884
+pixelY = (0.5 - ln((1 + 0.28950884) / (1 - 0.28950884)) / (4 * pi)) * 256 * 2^17 = 15185629.9145037
+```
+
+These are large because they're pixel coordinates on the world map.  Next we convert from pixel coordinates to tile coordinates:
+
+```
+tileX = floor(25611426.8662807 / 256) = 100044
+tileY = floor(15185629.9145037  / 256) = 59318
+```
+
+Converting to base 2, we get:
+
+```
+tileX_2 = 11000011011001100
+tileY_2 = 01110011110110110
+```
+
+Interleaving, starting with Y:
+
+```
+0111101000001111101101101001111000
+```
+
+and finally, convert to base 4:
+
+```
+quadkey = 13220033231221320 
+```
+
+Swapping this key into one of the image urls from earlier:
+
+```http://ecn.t1.tiles.virtualearth.net//tiles//a13220033231221320.jpeg?g=6748```
+
+![Located tile](http://ecn.t1.tiles.virtualearth.net//tiles//a13220033231221320.jpeg?g=6748)
+
+We'll need to do similar work to convert all building coordinates into pixel coordinates for this image, such that we can "draw" buildings on our retrieved map tiles. 
 
 
 ## Validated Areas
@@ -208,7 +254,7 @@ Using Convolutional Networks](https://arxiv.org/pdf/1602.06564.pdf)
   - [ ] Get Bing map tiles for any given region (how many zoom levels?)
     - [ ] Segment region polygon into multiple Bing tile centre points (for suitable zoom levels)
     - [ ] Store tiles using quadkeys for names? Or coords?  These need to correspond neatly to building geometry
-  - [ ] Get building geometry from validated regions
+  - [x] Get building geometry from validated regions
 - [ ] Training data:
   - [ ] Overlay building geometry atop Bing tiles
   - [ ] Collect + organise across multiple HOT project areas
@@ -313,3 +359,4 @@ for project in `ls -1 data/validated_tasks/`; do echo "Project: $project" && pyt
 ```
 
 This is an overnight run, processing all validated tasks from the 40 Ayeyarwady projects we looked up to begin with.  It resulted in output of `545,179` validated building polygons.  The next step is to find the corresponding map tiles.
+
