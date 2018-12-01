@@ -70,6 +70,11 @@ def quadkey_containing_lat_lon(latitude, longitude, level_of_detail):
 
 
 def enumerate_quadkeys_in_box(min_latitude, min_longitude, max_latitude, max_longitude, level_of_detail):
+    """
+        Note the min/max switch in latitude as latitude is inverted relative to pixel coords.
+        This needs edge case testing, e.g. for boundary lat/lons, equator. Ignoring for now
+        as my usecase is in a straightforward region
+    """
     (min_tile_x, min_tile_y) = lat_lon_to_tile_xy(max_latitude, min_longitude, level_of_detail)
     (max_tile_x, max_tile_y) = lat_lon_to_tile_xy(min_latitude, max_longitude, level_of_detail)
 
@@ -81,3 +86,4 @@ def enumerate_quadkeys_in_box(min_latitude, min_longitude, max_latitude, max_lon
             quadkeys.append(tile_xy_to_quadkey(x, y, level_of_detail))
 
     return sorted(quadkeys)
+
