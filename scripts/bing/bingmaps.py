@@ -56,3 +56,10 @@ def tile_xy_to_quadkey(tile_x, tile_y, level_of_detail):
         quadkey = quadkey + str(digit)
         
     return quadkey
+
+
+def quadkey_containing_lat_lon(latitude, longitude, level_of_detail):
+    (pixel_x, pixel_y) = lat_lon_to_pixel_xy(latitude, longitude, level_of_detail)
+    (tile_x, tile_y) = pixel_xy_to_tile_xy(pixel_x, pixel_y)
+    return tile_xy_to_quadkey(tile_x, tile_y, level_of_detail)
+
