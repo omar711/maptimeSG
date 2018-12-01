@@ -83,5 +83,5 @@ def enumerate_quadkeys_in_box(min_latitude, min_longitude, max_latitude, max_lon
         for y in range(min_tile_y, max_tile_y + 1):
             quadkeys.append(tile_xy_to_quadkey(x, y, level_of_detail))
 
-    return sorted(quadkeys)
+    return quadkeys
 
