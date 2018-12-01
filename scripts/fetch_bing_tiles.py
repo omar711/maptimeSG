@@ -102,9 +102,7 @@ if __name__ == "__main__":
         max_lat = float(task["max_lat"])
         max_lon = float(task["max_lon"])
 
-        if output_folder is None:
-            output_folder = get_output_folder(project_id, task_id, zoom_level, args.outputFolder)
-            print("Created output folder at %s" % (output_folder, ))
+        output_folder = get_output_folder(project_id, task_id, zoom_level, args.outputFolder)
 
         if url is None:
             map_metadata = fetch_map_metadata(min_lat, min_lon, api_key)
