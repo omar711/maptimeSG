@@ -127,7 +127,7 @@ sinLatitude = sin(16.8285533 * pi / 180) = 0.28950884
 pixelY = (0.5 - ln((1 + 0.28950884) / (1 - 0.28950884)) / (4 * pi)) * 256 * 2^17 = 15185629.9145037
 ```
 
-These are large because they're pixel coordinates on the world map.  Next we convert from pixel coordinates to tile coordinates:
+These are large because they are pixel coordinates on the world map.  Next we convert from pixel coordinates to tile coordinates:
 
 ```
 tileX = floor(25611426.8662807 / 256) = 100044
