@@ -25,6 +25,17 @@ def fetch_map_metadata(center_lat, center_lon, api_key):
         r.raise_for_status()
 
 
+def try_to_fetch_and_save_image(url, output_folder, max_attempts=2):
+    attempts = 0
+
+    while attempts < max_attempts:
+        try:
+            return fetch_and_save_image(url, output_folder)
+        except requests.exceptions.ConnectionError:
+            print("Request failed, retrying...")
+            attempts = attempts + 1
+
+
 def fetch_and_save_image(url, output_folder):
     r = requests.get(url, stream=True)
     
@@ -112,7 +123,7 @@ if __name__ == "__main__":
         quadkeys = bingmaps.enumerate_quadkeys_in_box(min_lat, min_lon, max_lat, max_lon, zoom_level)
         for quadkey in quadkeys:
             image_url = image_url_for_quadkey(url, quadkey)
-            fetch_and_save_image(image_url, output_folder)
+            try_to_fetch_and_save_image(image_url, output_folder)
 
         print("Written %s tiles to %s" % (len(quadkeys), output_folder))
 
