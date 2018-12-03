@@ -1,6 +1,14 @@
 # Machine Tagging of Building Geometry
 
-This contains exploratory notes on how we might automatically tag buildings in satellite imagery in order to accelerate work at [hotosm](https://tasks.hotosm.org).  The aim is to decompose this into useful steps and decision points.
+This contains exploratory notes on how we can machine tag buildings in satellite imagery to accelerate work at [hotosm](https://tasks.hotosm.org).  First we will compile a data set suitable for machine learning training, then proceed to learn.  
+
+At a high level, we begin with verified mapping tasks where volunteers have tagged buildings in maps.  A later human later verifies their work.  It is these verified tasks that we collect building polygons and map tiles from.  The image below shows these task areas and their various states of completeness:
+
+<img src="image/irregular-region.png" alt="Verified Task Area" width="400"/>
+
+Once we have verified tasks we can collect building geometry and map tiles.  This involves pulling buildings from OSM and map tiles from Bing.  Below shows a completed state where we have a vanilla map tile (our input) and a tile labelling buildings in white (our truth).  Together these form the training data for our machine learning pipeline:
+
+<img src="image/map-plus-truth.png" alt="Verified Task Area" width="600"/>
 
 
 # Collecting Training Data
