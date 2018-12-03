@@ -20,7 +20,7 @@ We begin by compiling a set of training data, along with tools to reproduce this
 1. [Query Area for Building Polygons](../../wiki/Find-Building-Polygons-using-the-Overpass-API)
 1. [Fetch Map Tiles & Match to Buildings](../../wiki/Find-Map-Tiles-&-Computing-Coordinates)
 
-The scripts and code used to perform this are linked to below.
+[Scripts and Code](../../wiki/Data-Collection-Scripts) gives detail on how to set up your environment and then run this data collection process.
 
 In addition you can check out the following notebooks for some exploratory work:
 
