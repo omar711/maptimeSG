@@ -25,27 +25,18 @@ def fetch_map_metadata(center_lat, center_lon, api_key):
         r.raise_for_status()
 
 
-# TODO: do retries correctly
 def fetch_and_save_image(url, output_folder):
-    retries = 1
-    r = None
-
-    for i in range(retries + 1):
-        r = requests.get(url, stream=True)
-        
-        if r.status_code == requests.codes.ok:
-            parsed = urllib.parse.urlparse(url)
-            filename = parsed.path.rpartition('/')[2]
-
-            with open(output_folder / filename, 'wb') as f:
-                for chunk in r:
-                    f.write(chunk)
-            
-            return
-        else:
-            print("Request failed, retrying (%s of %s)..." % (i + 1, retries))
+    r = requests.get(url, stream=True)
     
-    r.raise_for_status()
+    if r.status_code == requests.codes.ok:
+        parsed = urllib.parse.urlparse(url)
+        filename = parsed.path.rpartition('/')[2]
+
+        with open(output_folder / filename, 'wb') as f:
+            for chunk in r:
+                f.write(chunk)
+    else:
+        r.raise_for_status()
 
 
 def get_image_url(map_metadata):
