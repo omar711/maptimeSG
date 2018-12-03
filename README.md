@@ -243,6 +243,7 @@ Here are articles / papers I've spotted that could be promising leads.
 1. Microsoft: [Classifying UK Roofs](https://blogs.technet.microsoft.com/uktechnet/2018/04/18/classifying-the-uks-roofs-from-aerial-imagery-using-deep-learning-with-cntk/), plus [source code](https://github.com/TempestVanSchaik/roof-Classification).
 1. [Automatic Building Extraction in Aerial Scenes
 Using Convolutional Networks](https://arxiv.org/pdf/1602.06564.pdf)
+1. [Automatic road tagging](https://wiki.openstreetmap.org/wiki/AI-Assisted_Road_Tracing): very similar workflow and worth reading further when considering how to deploy our work.
 
 
 # Todos
@@ -251,9 +252,8 @@ Using Convolutional Networks](https://arxiv.org/pdf/1602.06564.pdf)
   - [x] Enumerate projects, e.g. we will start with the Ayeyarwady Delta
   - [x] Get validated regions via HOT APIs
   - [ ] ~~Handle irregular regions (>5 points in the bounding box)~~
-  - [ ] Get Bing map tiles for any given region (how many zoom levels?)
-    - [ ] Segment region polygon into multiple Bing tile centre points (for suitable zoom levels)
-    - [ ] Store tiles using quadkeys for names? Or coords?  These need to correspond neatly to building geometry
+  - [x] Get Bing map tiles for any given region (how many zoom levels?)
+    - [ ] Error handling / retry due to connection error making the request in `fetch_and_save_image()`
   - [x] Get building geometry from validated regions
 - [ ] Training data:
   - [ ] Overlay building geometry atop Bing tiles
@@ -379,3 +379,5 @@ for project in `ls -1 data/validated_tasks/`; do echo "Project: $project" && pyt
 ```
 
 Run this once for each level of zoom we require, which I believe means 17, 18, 19.
+
+Notes: projects `3340, 3384, 3691, 3744, 3745, 5127` stalled so I terminated. Run this again, zoom level 18.
