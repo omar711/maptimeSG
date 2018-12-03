@@ -7,207 +7,22 @@ This contains exploratory notes on how we might automatically tag buildings in s
 
 This is where we get started.  It'll require at least a couple of inputs:
 
+1. [Enumerating Projects](wiki/Enumerating-Projects)
 1. Validated building polygons
-2. Corresponding map tiles from Bing
-3. A way to tie the above together: likely via the HOTOSM task database
+1. Corresponding map tiles from Bing
+1. A way to tie the above together: likely via the HOTOSM task database
 
-
-## Validated Building Polygons
-
-We can use APIs to extract building polygons from OSM, assuming we know the bounding box for a validated area from a HOTOSM task.
 
 ### Querying Overpass API
-
-My current best option is the [Overpass API](https://wiki.openstreetmap.org/wiki/Overpass_API).  
-
-I started out by using an [interactive interpreter](http://overpass-turbo.eu/) so that I could figure out the APIs.  You'll need to focus the map on a suitable area that isn't too large.  I approximated one of the task areas by zooming to an arbitrary part of the Ayeyarwady Delta region.
-
-This is the query I'm using:
-
-```
-[out:json][timeout:25];
-(
-  way[building=yes](16.8020079588,94.7424954283,16.8045079588,94.7449954283);
-  node(w);
-);
-
-out body;
->;
-```
-
-Running the query highlights all buildings within the bounding box specified `(50.69,7.05,50.70,7.10)` and returns data that looks like this:
-
-```
-{
-  "version": 0.6,
-  "generator": "Overpass API 0.7.55.4 3079d8ea",
-  "osm3s": {
-    "timestamp_osm_base": "2018-11-13T08:55:02Z",
-    "copyright": "The data included in this document is from www.openstreetmap.org. The data is made available under ODbL."
-  },
-  "elements": [
-
-{
-  "type": "node",
-  "id": 5232934228,
-  "lat": 16.1383822,
-  "lon": 94.9397551
-},
-
-...
-
-{
-  "type": "way",
-  "id": 541077304,
-  "nodes": [
-    5232961884,
-    5232961885,
-    5232961886,
-    5232961887,
-    5232961884
-  ],
-  "tags": {
-    "building": "yes"
-  }
-},
-
-...
-]
-}
-
-```
-
-Each *way* is a building, because I filtered that way in the query above.  The way contains a list of *node*s.  These nodes are also contained in the results and will allow us to transform the list of nodes into a polygon. 
-
-If we can do this automatically, across all validated areas for a particular task (or set of them), we should have a decent set of true data specifying the location of buildings.  The next step would be to pull the relevant imagery from Bing so we can start training machine learning models.
-
-#### Command line version of the above
-
-If we write the contents of the above query into a file on disk, `data/sample/overpass-sample-query.post`, we can query Overpass as follows:
-
-```
-curl -XPOST https://overpass.kumi.systems/api/interpreter -d @data/sample/overpass-sample-query.post
-```
 
 
 ## Map tiles
 
-Grabbing map tiles is usually simple enough.  For example, here is a tile from the Ayeyarwady delta region: 
-
-![tile from the Ayeyarwady delta region](https://ecn.t2.tiles.virtualearth.net/tiles/a1322021130001120320.jpeg?g=587&mkt=en-gb&n=z)
-
-The URL for the tile above is `https://ecn.t2.tiles.virtualearth.net/tiles/a1322021130001120320.jpeg?g=587&mkt=en-gb&n=z`, but note that this might change over time.  
-
-To do this correctly we'll need to use the Bing API.  This [Metadata API](https://msdn.microsoft.com/en-us/library/ff701716.aspx) might be what we need.  It needs testing, and ideally we'd be able to query by bounding box, rather than a centre point.   See also these useful [overview notes on Bing Maps](https://msdn.microsoft.com/en-us/library/bb259689.aspx) themselves.
-
-An API key is needed from [Bing Maps Portal](https://www.bingmapsportal.com).
-
-Here's an example API call that'll return a single tile's metadata, including the image URL:
-
-```
-https://dev.virtualearth.net/REST/V1/Imagery/Metadata/Aerial/16.851862450285,95.7293701000399?zl=15&o=json&key=<BING KEY>
-```
-
-changing the zoom level gives a series of images:
-
-![Image Tile](http://ecn.t3.tiles.virtualearth.net//tiles//a132201222203023.jpeg?g=6748) ![Image Tile](http://ecn.t2.tiles.virtualearth.net//tiles//a1322012222030232.jpeg?g=6748) ![Image Tile](http://ecn.t1.tiles.virtualearth.net//tiles//a13220122220302321.jpeg?g=6748) ![Image Tile](http://ecn.t1.tiles.virtualearth.net//tiles//a132201222203023211.jpeg?g=6748) ![Image Tile](http://ecn.t1.tiles.virtualearth.net//tiles//a1322012222030232111.jpeg?g=6748)
-
-The challenge here will be identifying the correct set of centre points to create the full grid of map tiles to cover a validated region at our desired zoom level.  I'm sure it's been done elsewhere so some reading is in order.
-
-### Computing the tile for a given coordinate
-
-This is based on [instructions from Bing](https://msdn.microsoft.com/en-us/library/bb259689.aspx?f=255&MSPPError=-2147217396).
-
-Example: we have a building with a corner located at:  `16.8285533, 94.7808001`.  Let's choose a suitable zoom level to work with, `17`.  Converting our coordinates to pixel coordinates:
-
-```
-pixelX = ((94.7808001 + 180) / 360) * 256 * 2^17 = 25611426.8662807
-
-sinLatitude = sin(16.8285533 * pi / 180) = 0.28950884
-pixelY = (0.5 - ln((1 + 0.28950884) / (1 - 0.28950884)) / (4 * pi)) * 256 * 2^17 = 15185629.9145037
-```
-
-These are large because they are pixel coordinates on the world map.  Next we convert from pixel coordinates to tile coordinates:
-
-```
-tileX = floor(25611426.8662807 / 256) = 100044
-tileY = floor(15185629.9145037  / 256) = 59318
-```
-
-Converting to base 2, we get:
-
-```
-tileX_2 = 11000011011001100
-tileY_2 = 01110011110110110
-```
-
-Interleaving, starting with Y:
-
-```
-0111101000001111101101101001111000
-```
-
-and finally, convert to base 4:
-
-```
-quadkey = 13220033231221320 
-```
-
-Swapping this key into one of the image urls from earlier:
-
-```http://ecn.t1.tiles.virtualearth.net//tiles//a13220033231221320.jpeg?g=6748```
-
-![Located tile](http://ecn.t1.tiles.virtualearth.net//tiles//a13220033231221320.jpeg?g=6748)
-
-We'll need to do similar work to convert all building coordinates into pixel coordinates for this image, such that we can "draw" buildings on our retrieved map tiles. 
-
 
 ## Validated Areas
 
-Project details can be retrieved, by project ID, as follows:
-
-```
-https://tasks.hotosm.org/api/v1/project/<projectid>
-```
-
-For example:
-
-```
-https://tasks.hotosm.org/api/v1/project/5364```
-```
-
-The response has a lot but interesting to us would be the fields:
-
-* `areaOfInterest`: this contains hundreds of lat/lon pairs. This seems to be a polygon defining the overall shape of the project region.
-* `entitiesToMap`: worth checking this includes `buildings`
-* `mappingTypes`: array, contains `BUILDINGS`
-* **`tasks`**: the big one. 
-  * `geometry`: This contains each feature square including box coordinates (5 points, first and last identical)
-  * `properties`: contains a `taskStatus`, e.g. `MAPPED`, `VALIDATED`, ... 
-
-I've saved a full [sample JSON file](data/sample/5364-validated-region.json) for the project `5364`.
-
-### Note: Irregular Task Areas
-
-Most areas are square and I'm assuming this is the case in our data collection scripts.  This is not always true.  Here's an example:
-
-<img src="image/irregular-region.png" alt="irregular region" width="600"/>
-
-Some edge areas have irregular shapes.  Irregular shapes are non-rectangular ones, which we detect as having more or less than 4 corners, or as having any edges that are not vertical or horizontal lines.
-
-We could take the maximal bounding box in such cases, but that risks us later pulling in buildings from unvalidated areas and considering them validated.  
-
-The correct thing to do is to carry the full task polygon forward and then remove map tiles plus building geometry that falls outside of the polygon.  It'll add complexity so for now I will ignore any tasks with irregular shapes.
-
 
 ## Project Enumeration
-
-A quick note on this, currently as a means of collecting relevant project IDs:
-
-```
-curl -H "Accept-Language: en" -XGET "https://tasks.hotosm.org/api/v1/project/search?mapperLevel=ALL&textSearch=Ayeyarwady"
-```
-
 
 
 # Train a model
@@ -384,4 +199,4 @@ for project in `ls -1 data/validated_tasks/`; do echo "Project: $project" && pyt
 
 Run this once for each level of zoom we require, which I believe means 17, 18, 19.
 
-Notes: projects `3340, 3384, 3691, 3744, 3745, 5127` stalled so I terminated. Run this again, zoom level 18.
+Notes: projects `3340, 3744, 3745, 5127` stalled so I terminated. Run this again, zoom level 18.
