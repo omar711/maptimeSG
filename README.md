@@ -10,6 +10,15 @@ Once we have verified tasks we can collect building geometry and map tiles.  Thi
 
 <img src="image/map-plus-truth.png" alt="Verified Task Area" width="600"/>
 
+## Collected Data
+
+With a focus on the Ayeyarwady Delta region, we have collected:
+
+* 40 project areas
+* 14,292 verified task areas
+* 545,139 verified building polygons
+* 561,310 (or 7.1GB) corresponding map tiles
+
 
 # Collecting Training Data
 
