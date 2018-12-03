@@ -270,7 +270,11 @@ The following should get you started:
 virtualenv env
 source env/bin/activate
 
-pip install jupyter ipython numpy scipy scikit-learn geojson requests opencv-contrib-python matplotlib
+pip install jupyter ipython numpy scipy scikit-learn geojson requests opencv-contrib-python matplotlib tqdm
+
+# tensorflow
+pip install https://storage.googleapis.com/tensorflow/mac/cpu/tensorflow-1.12.0-py3-none-any.whl
+pip install tensorflow-hub
 ```
 
 # Command Line Tools
