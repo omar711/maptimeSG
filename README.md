@@ -16,7 +16,7 @@ The scripts and code used to perform this are linked to below.
 
 In addition you can check out the following notebooks for some exploratory work:
 
-1. [Computing Pixel Coordinates to Display Buildings on Map Tiles](blob/master/scripts/map_tile_truth_preparation.ipynb)
+1. [Computing Pixel Coordinates to Display Buildings on Map Tiles](scripts/map_tile_truth_preparation.ipynb)
 
 # Machine Learning: Model Training and Deployment
 
