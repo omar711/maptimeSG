@@ -5,24 +5,14 @@ This contains exploratory notes on how we might automatically tag buildings in s
 
 # Collecting Training Data
 
-This is where we get started.  It'll require at least a couple of inputs:
+We begin by compiling a set of training data, along with tools to reproduce this later, or extend for future uses.  The following pages give background on how we collect data from three sources (OSM, HOTOSM, Bing) in order to generate a set of map tiles with corresponding verified building polygons.  
 
-1. [Enumerating Projects](wiki/Enumerating-Projects)
-1. Validated building polygons
-1. Corresponding map tiles from Bing
-1. A way to tie the above together: likely via the HOTOSM task database
+1. [Enumerate Projects of Interest](../../wiki/Enumerating-Projects)
+1. [Locate Validated Task Areas](../../wiki/Finding-Validated-Task-Areas)
+1. [Query Area for Building Polygons](../../wiki/Find-Building-Polygons-using-the-Overpass-API)
+1. [Fetch Map Tiles & Match to Buildings](../../wiki/Find-Map-Tiles-&-Computing-Coordinates)
 
-
-### Querying Overpass API
-
-
-## Map tiles
-
-
-## Validated Areas
-
-
-## Project Enumeration
+The scripts and code used to perform this are linked to below.
 
 
 # Train a model
