@@ -1,10 +1,13 @@
 from argparse import ArgumentParser
-from util import bingmaps
 from pathlib import Path
+from shutil import copyfile
+from tqdm import tqdm
 from util import bingmaps
 
 import csv
+import cv2
 import json
+import numpy as np
 import requests
 import urllib
 
@@ -35,6 +38,14 @@ def bounding_box_to_lat_lon_list(bounding_box):
     return box
 
 
+def bounding_box_to_pixel_coords(bounding_box_lat_lon, zoom_level):
+    box = []
+    for (lat, lon) in bounding_box_lat_lon:
+        (x, y) = bingmaps.pixel_xy_relative_to_tile(lat, lon, zoom_level)
+        box.append([x, y])
+    return box
+
+
 def bounding_box_entirely_in_same_tile(bounding_box_lat_lon, zoom_level):
     previous_quadkey = None
 
@@ -55,11 +66,18 @@ def get_output_folder(project_id, task_id, zoom_level, output_folder):
     return path
 
 
+def get_output_paths(project_id, task_id, zoom_level, output_folder, quadkey):
+    output_folder = get_output_folder(project_id, task_id, zoom_level, output_folder)
+    truth_name = "a%s_truth.jpeg" % quadkey
+    tile_name = "a%s.jpeg" % quadkey
+
+    return (output_folder / tile_name, output_folder / truth_name)
+
+
 def get_maptile_path(project_id, task_id, zoom_level, maptile_folder, quadkey):
     file_name = "a%s.jpeg" % quadkey
     path = Path(maptile_folder) / Path(str(project_id)) / Path(str(task_id)) / Path(str(zoom_level)) / file_name
     return path
-    
 
 
 def parse_arguments():    
@@ -84,6 +102,9 @@ if __name__ == "__main__":
     url = None
     zoom_level = int(args.zoomLevel)
 
+    quadkey_buildings = {}
+    quadkey_meta = {}
+
     for task in load_buildings_from_file(args.buildingCsv):
         project_id = task["project_id"]
         task_id = task["task_id"]
@@ -92,11 +113,35 @@ if __name__ == "__main__":
 
         if bounding_box_entirely_in_same_tile(bounding_box, zoom_level):
             quadkey = bingmaps.quadkey_containing_lat_lon(bounding_box[0][0], bounding_box[0][1], zoom_level)
-            maptile_path = get_maptile_path(project_id, task_id, zoom_level, args.mapTiles, quadkey)
+            bounding_box_pixel_coords = bounding_box_to_pixel_coords(bounding_box, zoom_level)
 
-            print(maptile_path.exists())
+            if quadkey in quadkey_buildings:
+                quadkey_buildings[quadkey].append(bounding_box_pixel_coords)
+            else:
+                quadkey_buildings[quadkey] = [bounding_box_pixel_coords]
+
+            quadkey_meta[quadkey] = {
+                "project_id" : project_id,
+                "task_id" : task_id
+            }
+        
+    print("Found %s map tiles containing complete quadkeys. Writing output under %s" % (len(quadkey_buildings.keys()), args.outputFolder))        
             
+    for (quadkey, bounding_boxes) in tqdm(quadkey_buildings.items()):
+        project_id = quadkey_meta[quadkey]["project_id"]
+        task_id = quadkey_meta[quadkey]["task_id"]
+
+        maptile_path = get_maptile_path(project_id, task_id, zoom_level, args.mapTiles, quadkey)
+        if maptile_path.exists():
+            (output_tile, output_truth) = get_output_paths(project_id, task_id, zoom_level, args.outputFolder, quadkey)
             
-        #output_folder = get_output_folder(project_id, task_id, zoom_level, args.outputFolder)
+            truth = np.zeros([256, 256, 3], np.uint8)
+            
+            for bounding_box in bounding_boxes:
+                cv2.fillPoly(truth, np.array([bounding_box], dtype='int32'), (255, 255, 255))
+            
+            cv2.imwrite(str(output_truth), truth)
+
+            copyfile(str(maptile_path), str(output_tile))
 
 
