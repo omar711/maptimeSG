@@ -10,6 +10,7 @@ MIN_LATITUDE = -85.05112878;
 MAX_LATITUDE = 85.05112878;
 MIN_LONGITUDE = -180;
 MAX_LONGITUDE = 180;
+BING_TILE_SIZE_PIXELS = 256;
 
 def clip(value, min_value, max_value):
     return min(max(value, min_value), max_value)
@@ -23,7 +24,7 @@ def lat_lon_to_pixel_xy(latitude, longitude, level_of_detail):
     latitude = clip(latitude, MIN_LATITUDE, MAX_LATITUDE)
     longitude = clip(longitude, MIN_LONGITUDE, MAX_LONGITUDE)
 
-    pixel_size = 256 * map_size(level_of_detail)
+    pixel_size = BING_TILE_SIZE_PIXELS * map_size(level_of_detail)
 
     x = (longitude + 180) / 360 * pixel_size; 
     sinLatitude = sin(latitude * pi / 180)
@@ -36,8 +37,8 @@ def lat_lon_to_pixel_xy(latitude, longitude, level_of_detail):
 
 
 def pixel_xy_to_tile_xy(pixel_x, pixel_y):
-    tile_x = floor(pixel_x / 256)
-    tile_y = floor(pixel_y / 256)
+    tile_x = floor(pixel_x / BING_TILE_SIZE_PIXELS)
+    tile_y = floor(pixel_y / BING_TILE_SIZE_PIXELS)
     return (tile_x, tile_y)
 
 
@@ -84,4 +85,18 @@ def enumerate_quadkeys_in_box(min_latitude, min_longitude, max_latitude, max_lon
             quadkeys.append(tile_xy_to_quadkey(x, y, level_of_detail))
 
     return quadkeys
+
+def pixel_xy_relative_to_tile(lat, lon, level_of_detail):
+    """
+        Given a lat,lon pair, returns pixel coordinates within its given map tile.
+        Use this if you have a map tile and want to plot the given lat/lon on that tile using pixel coordinates.
+    """
+    (pixel_x, pixel_y) = lat_lon_to_pixel_xy(lat, lon, level_of_detail)
+    (tile_x, tile_y) = pixel_xy_to_tile_xy(pixel_x, pixel_y)
+    tile_pixel_x = tile_x * BING_TILE_SIZE_PIXELS
+    tile_pixel_y = tile_y * BING_TILE_SIZE_PIXELS
+    
+    relative_pixel_x = pixel_x - tile_pixel_x
+    relative_pixel_y = pixel_y - tile_pixel_y
+    return (relative_pixel_x, relative_pixel_y)
 
