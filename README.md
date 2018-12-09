@@ -1,12 +1,12 @@
 # Machine Tagging of Building Geometry
 
-This contains exploratory notes on how we can machine tag buildings in satellite imagery to accelerate work at [hotosm](https://tasks.hotosm.org).  First we will compile a data set suitable for machine learning training, then proceed to learn.  
+This contains work toward machine tagging of buildings in satellite imagery to accelerate work of the [Humanitarian OpenStreetMap Team](https://tasks.hotosm.org).  First we will compile a data set suitable for machine learning training, then proceed to learn.  
 
-At a high level, we begin with verified mapping tasks where volunteers have tagged buildings in maps.  A later human later verifies their work.  It is these verified tasks that we collect building polygons and map tiles from.  The image below shows these task areas and their various states of completeness:
+At a high level, we begin with verified mapping tasks where volunteers have tagged buildings in maps.  A second human later verifies their work.  It is these verified tasks that we collect building polygons and map tiles from.  The image below shows these task areas and their various states of completeness:
 
 <img src="image/irregular-region.png" alt="Verified Task Area" width="400"/>
 
-Once we have verified tasks we can collect building geometry and map tiles.  This involves pulling buildings from OSM and map tiles from Bing.  Below shows a completed state where we have a vanilla map tile (our input) and a tile labelling buildings in white (our truth).  Together these form the training data for our machine learning pipeline:
+Once we have verified tasks we can collect building geometry and map tiles.  This involves pulling buildings from OSM and map tiles from Bing.  Below shows a completed state where we have a vanilla map tile (our input) and a tile with labelled buildings in white (our truth).  Together these form the training data for our machine learning pipeline:
 
 <img src="image/map-plus-truth.png" alt="Verified Task Area" width="600"/>
 
@@ -20,9 +20,9 @@ With a focus on the Ayeyarwady Delta region, we have collected:
 * 561,310 (or 7.1GB) corresponding map tiles
 
 
-# Collecting Training Data
+# Building the Training Set
 
-We begin by compiling a set of training data, along with tools to reproduce this later, or extend for future uses.  The following pages give background on how we collect data from three sources (OSM, HOTOSM, Bing) in order to generate a set of map tiles with corresponding verified building polygons.  
+We began by compiling a set of training data, along with tools to reproduce this later, or extend for future uses.  The following pages give background on how we collected data from three sources (OSM, HOTOSM, Bing) in order to generate a set of map tiles with corresponding verified building polygons.  
 
 1. [Enumerate Projects of Interest](../../wiki/Enumerating-Projects)
 1. [Locate Validated Task Areas](../../wiki/Finding-Validated-Task-Areas)
@@ -31,7 +31,7 @@ We begin by compiling a set of training data, along with tools to reproduce this
 
 [Scripts and Code](../../wiki/Data-Collection-Scripts) gives detail on how to set up your environment and then run this data collection process.
 
-In addition you can check out the following notebooks for some exploratory work:
+In addition you can check out the following Jupyter notebooks for some exploratory work:
 
 1. [Computing Pixel Coordinates to Display Buildings on Map Tiles](scripts/map_tile_truth_preparation.ipynb)
 
