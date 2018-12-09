@@ -28,6 +28,7 @@ We began by compiling a set of training data, along with tools to reproduce this
 1. [Locate Validated Task Areas](../../wiki/Finding-Validated-Task-Areas)
 1. [Query Area for Building Polygons](../../wiki/Find-Building-Polygons-using-the-Overpass-API)
 1. [Fetch Map Tiles & Match to Buildings](../../wiki/Find-Map-Tiles-&-Computing-Coordinates)
+1. [Generate Image Pairs Suitable for ML](../../wiki/Generate-Image-Pairs-Suitable-for-ML)
 
 [Scripts and Code](../../wiki/Data-Collection-Scripts) gives detail on how to set up your environment and then run this data collection process.
 
@@ -52,11 +53,10 @@ I'm also keeping a [Reading List](../../wiki/Reading-List).
     - [x] Error handling / retry due to connection error making the request in `fetch_and_save_image()`
   - [x] Get building geometry from validated regions
 - [ ] Training data:
-  - [ ] Overlay building geometry atop Bing tiles
-    - [ ] Iterate over validated building geometries
-    - [ ] Lookup maptile in filesystem > draw the corresponding input tile
+  - [x] Overlay building geometry atop Bing tiles
+    - [x] Iterate over validated building geometries
+    - [x] Lookup maptile in filesystem > draw the corresponding input tile
     - [ ] Think about buildings that cross maptiles
-  - [ ] Collect + organise across multiple HOT project areas
 - [ ] Machine learning: (for later) 
   - [ ] ...
 
