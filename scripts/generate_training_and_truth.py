@@ -55,6 +55,13 @@ def get_output_folder(project_id, task_id, zoom_level, output_folder):
     return path
 
 
+def get_maptile_path(project_id, task_id, zoom_level, maptile_folder, quadkey):
+    file_name = "a%s.jpeg" % quadkey
+    path = Path(maptile_folder) / Path(str(project_id)) / Path(str(task_id)) / Path(str(zoom_level)) / file_name
+    return path
+    
+
+
 def parse_arguments():    
     parser = ArgumentParser() 
     parser.add_argument("-b", "--buildingCsv", dest="buildingCsv",
@@ -84,9 +91,12 @@ if __name__ == "__main__":
         bounding_box = bounding_box_to_lat_lon_list(task["bounding_box"])
 
         if bounding_box_entirely_in_same_tile(bounding_box, zoom_level):
-            print("IN")
-        else:
-            print("OUT")
+            quadkey = bingmaps.quadkey_containing_lat_lon(bounding_box[0][0], bounding_box[0][1], zoom_level)
+            maptile_path = get_maptile_path(project_id, task_id, zoom_level, args.mapTiles, quadkey)
+
+            print(maptile_path.exists())
+            
+            
         #output_folder = get_output_folder(project_id, task_id, zoom_level, args.outputFolder)
 
 
