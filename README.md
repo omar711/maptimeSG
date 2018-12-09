@@ -44,15 +44,18 @@ I'm also keeping a [Reading List](../../wiki/Reading-List).
 
 # Todos
 
-- [ ] Collection scripts:
+- [x] Collection scripts:
   - [x] Enumerate projects, e.g. we will start with the Ayeyarwady Delta
   - [x] Get validated regions via HOT APIs
   - [ ] ~~Handle irregular regions (>5 points in the bounding box)~~
   - [x] Get Bing map tiles for any given region (how many zoom levels?)
-    - [ ] Error handling / retry due to connection error making the request in `fetch_and_save_image()`
+    - [x] Error handling / retry due to connection error making the request in `fetch_and_save_image()`
   - [x] Get building geometry from validated regions
 - [ ] Training data:
   - [ ] Overlay building geometry atop Bing tiles
+    - [ ] Iterate over validated building geometries
+    - [ ] Lookup maptile in filesystem > draw the corresponding input tile
+    - [ ] Think about buildings that cross maptiles
   - [ ] Collect + organise across multiple HOT project areas
 - [ ] Machine learning: (for later) 
   - [ ] ...
