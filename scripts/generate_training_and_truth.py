@@ -74,6 +74,20 @@ def get_output_paths(project_id, task_id, zoom_level, output_folder, quadkey):
     return (output_folder / tile_name, output_folder / truth_name)
 
 
+def get_keras_output_paths(project_id, task_id, zoom_level, output_folder, quadkey):
+    output_base = Path(output_folder)
+
+    output_train = Path(output_base) / Path("train") / Path("images")
+    output_train.mkdir(parents=True, exist_ok=True) 
+    
+    output_mask = Path(output_base) / Path("mask") / Path("images")
+    output_mask.mkdir(parents=True, exist_ok=True) 
+
+    file_name = "a%s.jpeg" % quadkey
+
+    return (output_train / file_name, output_mask / file_name)
+
+
 def get_maptile_path(project_id, task_id, zoom_level, maptile_folder, quadkey):
     file_name = "a%s.jpeg" % quadkey
     path = Path(maptile_folder) / Path(str(project_id)) / Path(str(task_id)) / Path(str(zoom_level)) / file_name
@@ -133,7 +147,7 @@ if __name__ == "__main__":
 
         maptile_path = get_maptile_path(project_id, task_id, zoom_level, args.mapTiles, quadkey)
         if maptile_path.exists():
-            (output_tile, output_truth) = get_output_paths(project_id, task_id, zoom_level, args.outputFolder, quadkey)
+            (output_tile, output_truth) = get_keras_output_paths(project_id, task_id, zoom_level, args.outputFolder, quadkey)
             
             truth = np.zeros([256, 256, 3], np.uint8)
             
