@@ -10,6 +10,13 @@ Once we have verified tasks we can collect building geometry and map tiles.  Thi
 
 <img src="image/map-plus-truth.png" alt="Map tile plus its corresponding truth" width="600"/>
 
+## Applications
+
+There are two directions I could see this going in:
+
+1. AI plays the role of the first volunteer, tagging large areas on the map to be later verified by humans.
+1. Used for high-level planning, or as a first line of information in cases of sudden need.  Imagine the need arises in an as-yet unmapped area.  Models should give good direction to humans at a high-level, for example, estimating centres of population quickly across large geographies.  Here a reasonably accurate locator of buildings would be valuable, even if it cannot accurately trace building polygons.
+
 # Current Status
 
 Data has been collected for the Ayeyarwady Delta region and pre-processed into input/output pairs.   The input is a plain satellite map tile and the output is a black and white images where white pixels indicate the presence of a building. 
