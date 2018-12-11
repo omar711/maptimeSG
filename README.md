@@ -57,20 +57,10 @@ For now I've written very high level notes on [Model Training](../../wiki/Notes-
 I'm also keeping a [Reading List](../../wiki/Reading-List).
 
 
-# Todos
+# Next Steps
 
-- [x] Collection scripts:
-  - [x] Enumerate projects, e.g. we will start with the Ayeyarwady Delta
-  - [x] Get validated regions via HOT APIs
-  - [ ] ~~Handle irregular regions (>5 points in the bounding box)~~
-  - [x] Get Bing map tiles for any given region (how many zoom levels?)
-    - [x] Error handling / retry due to connection error making the request in `fetch_and_save_image()`
-  - [x] Get building geometry from validated regions
-- [ ] Training data:
-  - [x] Overlay building geometry atop Bing tiles
-    - [x] Iterate over validated building geometries
-    - [x] Lookup maptile in filesystem > draw the corresponding input tile
-    - [ ] Think about buildings that cross maptiles
-- [ ] Machine learning: (for later) 
-  - [ ] ...
+- [ ] Modify existing TensorFlow models to run on our training data. See what happens.
+- [ ] Improve training data:
+  - [ ] Handle buildings that cross map tiles
+  - [ ] Include map tiles that contain zero buildings
 
