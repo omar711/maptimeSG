@@ -2,15 +2,21 @@
 
 This contains work toward machine tagging of buildings in satellite imagery to accelerate work of the [Humanitarian OpenStreetMap Team](https://tasks.hotosm.org).  First we will compile a data set suitable for machine learning training, then proceed to learn.  
 
-At a high level, we begin with verified mapping tasks where volunteers have tagged buildings in maps.  A second human later verifies their work.  It is these verified tasks that we collect building polygons and map tiles from.  The image below shows these task areas and their various states of completeness:
+This takes advantage of verified tasks in the HOTOSM project. First, a volunteer tag buildings within a given task area. Second, an experienced volunteer verifies their work.  Once done, tasks are marked as verified.  This gives us an excellent source of truth with which to do some machine learning.  Below is an example of a task grid, with tasks in varying states of completeness:
 
 <img src="image/irregular-region.png" alt="Verified Task Area" width="400"/>
 
 Once we have verified tasks we can collect building geometry and map tiles.  This involves pulling buildings from OSM and map tiles from Bing.  Below shows a completed state where we have a vanilla map tile (our input) and a tile with labelled buildings in white (our truth).  Together these form the training data for our machine learning pipeline:
 
-<img src="image/map-plus-truth.png" alt="Verified Task Area" width="600"/>
+<img src="image/map-plus-truth.png" alt="Map tile plus its corresponding truth" width="600"/>
 
-## Collected Data
+# Current Status
+
+Data has been collected for the Ayeyarwady Delta region and pre-processed into input/output pairs.   The input is a plain satellite map tile and the output is a black and white images where white pixels indicate the presence of a building. 
+
+This amounts to 121,078 map tiles, plus a corresponding b&w truth image for each.  Note here that our ~500,000 buildings are present in only ~1/5 of map tiles collected.  We'll need to consider this later we will currently ignore all map tiles that don't contain a building, which will likely bias our learner to be over-eager at finding buildings.
+
+## Collected Data to Date
 
 With a focus on the Ayeyarwady Delta region, we have collected:
 
@@ -18,6 +24,7 @@ With a focus on the Ayeyarwady Delta region, we have collected:
 * 14,292 verified task areas
 * 545,139 verified building polygons
 * 561,310 (or 7.1GB) corresponding map tiles
+* 121,078 map tiles that entirely contain buildings + 121,078 corresponding "truth" images
 
 
 # Building the Training Set
